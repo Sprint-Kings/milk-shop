@@ -4,7 +4,8 @@ import './App.css';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
 
-import {MainPage, CatalogPage, ContactsPage} from "../pages";
+import {MainPage, CatalogPage, ContactsPage, LoginPage, 
+  RegistrationPage, ProductPage, CartPage, ProfilePage, OrderPage, AdminPage} from "../pages";
 
 function App() {
   return (
@@ -16,16 +17,14 @@ function App() {
                 <Route path="/" element={<MainPage/>}/>
                 <Route path="/catalog" element={<CatalogPage/>}/>
                 <Route path="/contacts" element={<ContactsPage/>}/>
-                {/* <Route path="/login" element={<LoginPage/>} />
+                <Route path="/login" element={<LoginPage/>} />
                 <Route path="/register" element={<RegistrationPage/>} />
-                <Route path="/profile" element={<ProfilePage/>} />
                 <Route path="/product/:productId" element={<ProductPage/>}/>
-                <Route path="/catalog" element={<CatalogPage/>}/>
-                <Route path="/admin" element={<AdminPage/>}/>
                 <Route path="/cart" element={<CartPage/>}/>
+                <Route path="/profile" element={<ProfilePage/>} />
                 <Route path="/order/:id" element={<OrderPage/>}/>
-                <Route path="/contacts" element={<ContactsPage/>}/>
-                <Route path="*" element={<Page404/>}/> */}
+                <Route path="/admin" element={<AdminPage/>}/>
+                <Route path="*" element={<h1>404</h1>}/> 
             </Routes>
         </main>
         <Footer/>

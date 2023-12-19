@@ -2,7 +2,40 @@ import styled from 'styled-components';
 import logo from '../../img/logo.svg'
 import * as styles from '../../styles.js';
 
+import { useState, useEffect } from 'react';
+
+import AuthService from "../../services/AuthService";
+import EventBus from "../../services/EventBus";
+
 const Header = () => {
+    const [style, setStyle] = useState(false);
+    const [currentUser, setCurrentUser] = useState(false);
+    const [showAdminBoard, setShowAdminBoard] = useState(false);
+
+    useEffect(() => {
+        const user = AuthService.getCurrentUser();
+
+        if (user) {
+          setCurrentUser(user);
+          const roles = localStorage.getItem("roles")
+          setShowAdminBoard(roles.includes("ROLE_ADMIN"));
+        }
+
+        EventBus.on("logout", () => {
+            logOut();
+          });
+      
+          return () => {
+            EventBus.remove("logout");
+          };
+    }, []);
+
+    const logOut = () => {
+        AuthService.logout();
+        setShowAdminBoard(false);
+        setCurrentUser(false);
+    };
+
     const Container = styled.div`
         width: 100%;
         display: flex;
@@ -18,9 +51,6 @@ const Header = () => {
     
     const BlueLink = styled(styles.StyledLink)`
         color: #3F4FD9;
-        &:after {
-            
-        }
     `
     return (
     <Container>
@@ -32,8 +62,31 @@ const Header = () => {
                 Альпийская буренка
             </div>
         </BlueLink>
-        <BlueLink to={'/'}><styles.Button>войти</styles.Button></BlueLink>
-        <BlueLink to={'/'}><styles.Button>регистрация</styles.Button></BlueLink>
+        {currentUser !== false ? (
+                        <>
+                            {showAdminBoard ? 
+                            <BlueLink to={'/admin'} style={{ textDecoration: 'none'}} className='container-icon-image' onClick={() => setStyle(style => style ? !style : style)}>  
+                                <styles.Button>Админ</styles.Button>
+                            </BlueLink> : null}
+                            <BlueLink to={'/cart'} className='container-icon-image' onClick={() => setStyle(style => style ? !style : style)}>  
+                                    <styles.Button>Корзина</styles.Button>
+                            </BlueLink>
+                            <BlueLink to={'/profile'} className='container-icon-image' onClick={() => setStyle(style => style ? !style : style)}>
+                                <styles.Button>{currentUser}</styles.Button>
+                            </BlueLink>
+                            <BlueLink to={'/'} onClick={() => {logOut(); setStyle(style => style ? !style : style)}} className='container-icon-image'>
+                                <styles.Button>Выход</styles.Button>
+                            </BlueLink> 
+                        </>) : (
+                        <>
+                            <BlueLink to={'/login'} className='container-icon-image' onClick={() => setStyle(style => style ? !style : style)}>
+                                <styles.Button>Вход</styles.Button>
+                            </BlueLink>
+                            <BlueLink to={'/register'} className='container-icon-image' onClick={() => setStyle(style => style ? !style : style)}>
+                                <styles.Button>Регистрация</styles.Button>
+                            </BlueLink> 
+                        </>
+                    )}
     </Container>
     )
 }
